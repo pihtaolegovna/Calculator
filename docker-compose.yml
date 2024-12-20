@@ -1,0 +1,27 @@
+services:
+  calculator:
+    build:
+      context: ./calculator  # Указываем директорию с Dockerfile для калькулятора
+      dockerfile: Dockerfile  # Указываем файл Dockerfile для сборки образа
+    container_name: gui_calculator  # Имя контейнера для калькулятора
+    volumes:
+      - calc_data:/data  # Общий Volume для сохранения результатов вычислений
+      - ./settings.txt:/settings/settings.txt  # Монтируем файл настроек в контейнер
+    environment:
+      DISPLAY: host.docker.internal:0  # Переменная для X-сервера (отображение GUI)
+    network_mode: host  # Используем сетевой режим хоста для GUI-приложений
+
+  viewer:
+    build:
+      context: ./viewer  # Указываем директорию с Dockerfile для просмотрщика
+      dockerfile: Dockerfile  # Указываем файл Dockerfile для сборки образа
+    container_name: gui_viewer  # Имя контейнера для просмотрщика
+    volumes:
+      - calc_data:/data  # Общий Volume для чтения сохранённых результатов
+      - ./settings.txt:/settings/settings.txt  # Монтируем файл настроек в контейнер
+    environment:
+      DISPLAY: host.docker.internal:0  # Переменная для X-сервера (отображение GUI)
+    network_mode: host  # Используем сетевой режим хоста для GUI-приложений
+
+volumes:
+  calc_data:  # Volume для хранения результатов вычислений
